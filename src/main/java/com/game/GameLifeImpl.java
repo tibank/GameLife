@@ -123,7 +123,20 @@ public class GameLifeImpl implements GameLife {
                 "sizeX=" + sizeX +
                 ", sizeY=" + sizeY +
                 ", countTicks=" + countTicks +
-                ", matrix=" + Arrays.toString(matrix) +
+                ",\n" +
+                printMatrix() +
                 '}';
+    }
+
+    private String printMatrix() {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < sizeX; i++) {
+            for (int j = 0; j < sizeY; j++) {
+                result.append(matrix[i][j]);
+            }
+            result.append("\n");
+        }
+
+        return result.toString();
     }
 }
