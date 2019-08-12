@@ -4,23 +4,117 @@ import exceptions.ApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Properties;
 
 public class GameLifeImpl implements GameLife {
     private final static Logger log = LoggerFactory.getLogger(GameLifeImpl.class);
 
-    int sizeX;
-    int sizeY;
-    int countTicks;
-    String fileMatrix;
+    private int sizeX;
+    private int sizeY;
+    private int countTicks;
+    private String fileMatrix;
     char[][] matrix;
 
     @Override
-    public void tick() {
+    public void play() {
+        for (int i = 0; i < countTicks; i++) {
+            tick();
+            log.info("Iteration # " + (i + 1) + "\n " + toString());
+        }
+    }
 
+    private void tick() {
+        char[][] chars = initMatrix();
+        for (int i = 0; i < sizeX; i++) {
+            for (int j = 0; j < sizeY; j++) {
+                if (matrix[i][j] == 'X') {
+                    chars[i][j] = checkAliveCell(i, j);
+                } else {
+                    chars[i][j] = checkDeadCell(i, j);
+                }
+            }
+        }
+        matrix = chars;
+    }
+
+    private char checkAliveCell(int x, int y) {
+        int countAliveCells = 0;
+        int indexX, indexY;
+
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                indexX = x + i;
+                if (indexX < 0 || indexX >= sizeX) {
+                    continue;
+                }
+                indexY = y + j;
+                if (indexY < 0 || indexY >= sizeY) {
+                    continue;
+                }
+
+                if (indexX == x && indexY == y) {
+                    continue;
+                }
+
+                if (matrix[indexX][indexY] == 'X') {
+                    countAliveCells++;
+                }
+            }
+        }
+
+        if (countAliveCells == 2 || countAliveCells == 3) {
+            return 'X';
+        } else {
+            return 'O';
+        }
+    }
+
+    private char checkDeadCell(int x, int y) {
+        int countDeadCells = 0;
+        int indexX, indexY;
+
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                indexX = x + i;
+                if (indexX < 0 || indexX >= sizeX) {
+                    continue;
+                }
+                indexY = y + j;
+                if (indexY < 0 || indexY >= sizeY) {
+                    continue;
+                }
+
+                if (indexX == x && indexY == y) {
+                    continue;
+                }
+
+                    if (matrix[indexX][indexY] == 'O') {
+                        countDeadCells++;
+                    }
+            }
+        }
+
+        if (countDeadCells == 3) {
+            return 'X';
+        } else {
+            return 'O';
+        }
+    }
+
+    private char[][] initMatrix() {
+        char[][] chars = new char[sizeX][sizeY];
+        for (int i = 0; i < sizeX; i++) {
+            for (int j = 0; j < sizeY; j++) {
+                chars[i][j] = ' ';
+            }
+        }
+
+        return chars;
     }
 
     @Override
