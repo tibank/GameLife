@@ -2,8 +2,11 @@ package com.game;
 
 import exceptions.ApplicationException;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 public class LoaderConfigLifeGame {
@@ -12,18 +15,26 @@ public class LoaderConfigLifeGame {
     private int sizeY;
     private int countTicks;
     private String fileMatrix;
+    private char[][] matrix;
 
 
-    public void loadProperties() {
+    public void loadConfig() {
         Properties properties = readProperties();
         checkProperties(properties);
-        sizeX = Integer.valueOf(properties.getProperty("X"));
-        sizeY = Integer.valueOf(properties.getProperty("Y"));
-        countTicks = Integer.valueOf(properties.getProperty("count"));
+
+        sizeX = Integer.parseInt(properties.getProperty("X"));
+        sizeY = Integer.parseInt(properties.getProperty("Y"));
+        countTicks = Integer.parseInt(properties.getProperty("count"));
         fileMatrix = properties.getProperty("file");
+
+        try {
+            matrix = readMatrix();
+        } catch (IOException ex) {
+            throw new ApplicationException("Error reaiding file with matrix",ex);
+        }
     }
 
-    Properties readProperties() {
+    private Properties readProperties() {
         Properties properties = new Properties();
         try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties")) {
             properties.load(stream);
@@ -52,7 +63,7 @@ public class LoaderConfigLifeGame {
             throw new ApplicationException("Value attribute " + name + " is not defined");
         } else {
             try {
-                checkValue = Integer.valueOf(value);
+                checkValue = Integer.parseInt(value);
             } catch (NumberFormatException e) {
                 throw new ApplicationException("Error value of attribute " + name + " - is not a number");
             }
@@ -66,6 +77,36 @@ public class LoaderConfigLifeGame {
         if (fileName == null) {
             throw new ApplicationException("Not defined file with init matrix");
         }
+    }
+
+    private char[][] readMatrix() throws IOException {
+        URL url = getClass().getResource("/" + fileMatrix);
+        if (url == null) {
+            throw new ApplicationException("Doesn't exist ini-file " + fileMatrix);
+        }
+
+        int numberLine = 0;
+        char[][] result = new char[sizeX][sizeY];
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(url.getFile()))) {
+            String s;
+            while ((s = bufferedReader.readLine()) != null) {
+                s = s.trim();
+                if (s.isEmpty()) {
+                    continue;
+                }
+
+                for (int i = 0; i < sizeX; i++) {
+                    result[numberLine][i] = s.charAt(i);
+                }
+                numberLine++;
+                if (numberLine == sizeY) {
+                    break;
+                }
+            }
+        }
+
+        return result;
     }
 
     public int getSizeX() {
@@ -82,5 +123,9 @@ public class LoaderConfigLifeGame {
 
     public String getFileMatrix() {
         return fileMatrix;
+    }
+
+    public char[][] getMatrix() {
+        return matrix;
     }
 }

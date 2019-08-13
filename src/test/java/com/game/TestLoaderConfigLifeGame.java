@@ -10,8 +10,6 @@ import org.junit.rules.ExpectedException;
 import java.util.Properties;
 
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class TestLoaderConfigLifeGame {
 
@@ -91,7 +89,7 @@ public class TestLoaderConfigLifeGame {
 
     @Test
     public void testCheckPropertiesLoadProperties() {
-        loader.loadProperties();
+        loader.loadConfig();
 
         Assert.assertEquals(5,loader.getSizeX());
         Assert.assertEquals(5,loader.getSizeY());

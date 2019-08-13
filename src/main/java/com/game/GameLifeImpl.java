@@ -5,13 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.URL;
 
 public class GameLifeImpl implements GameLife {
     private final static Logger log = LoggerFactory.getLogger(GameLifeImpl.class);
 
-    private LoaderConfigLifeGame loader;
-    char[][] matrix;
+    private final LoaderConfigLifeGame loader;
+    private char[][] matrix;
 
     public GameLifeImpl(LoaderConfigLifeGame loader) {
         this.loader = loader;
@@ -36,6 +35,7 @@ public class GameLifeImpl implements GameLife {
                 }
             }
         }
+
         matrix = chars;
     }
 
@@ -114,65 +114,21 @@ public class GameLifeImpl implements GameLife {
         return chars;
     }
 
-
     @Override
     public void writeToFile() {
-        String fileName;
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("result.txt"))) {
             for (int i = 0; i < loader.getSizeX(); i++) {
                 bufferedWriter.write(matrix[i]);
                 bufferedWriter.newLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ApplicationException("Error writing result to file",e);
         }
     }
 
     @Override
     public void init() {
-        checkInitMatrix(loader.getFileMatrix());
-
-        try {
-            matrix = readMatrix();
-        } catch (IOException e) {
-            throw new ApplicationException("Error reading file with init matrix " + loader.getFileMatrix());
-        }
-    }
-
-    private char[][] readMatrix() throws IOException {
-        URL url = getClass().getResource("/" + loader.getFileMatrix());
-        if (url == null) {
-            throw new ApplicationException("Doesn't exist ini-file " + loader.getFileMatrix());
-        }
-
-        int numberLine = 0;
-        char[][] result = new char[loader.getSizeX()][loader.getSizeY()];
-
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(url.getFile()))) {
-            String s;
-            while ((s = bufferedReader.readLine()) != null) {
-                s = s.trim();
-                if (s.isEmpty()) {
-                    continue;
-                }
-
-                for (int i = 0; i < loader.getSizeX(); i++) {
-                    result[numberLine][i] = s.charAt(i);
-                }
-                numberLine++;
-                if (numberLine == loader.getSizeY()) {
-                    break;
-                }
-            }
-        }
-
-        return result;
-    }
-
-    private void checkInitMatrix(String fileName) {
-        if (fileName == null) {
-            throw new ApplicationException("Not defined file with init matrix");
-        }
+        matrix = loader.getMatrix();
     }
 
     @Override
