@@ -23,7 +23,7 @@ public class LoaderConfigLifeGame {
         fileMatrix = properties.getProperty("file");
     }
 
-    private Properties readProperties() {
+    Properties readProperties() {
         Properties properties = new Properties();
         try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties")) {
             properties.load(stream);
@@ -53,8 +53,8 @@ public class LoaderConfigLifeGame {
         } else {
             try {
                 checkValue = Integer.valueOf(value);
-            } catch (ArithmeticException e) {
-                throw new ApplicationException("Error value of attribute " + name + " is not a number");
+            } catch (NumberFormatException e) {
+                throw new ApplicationException("Error value of attribute " + name + " - is not a number");
             }
             if (checkValue <= 0) {
                 throw new ApplicationException("Error value of attribute " + name + ". It must be positive");
