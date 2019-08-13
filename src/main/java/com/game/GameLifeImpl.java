@@ -90,7 +90,7 @@ public class GameLifeImpl implements GameLife {
                     continue;
                 }
 
-                if (matrix[indexX][indexY] == 'O') {
+                if (matrix[indexX][indexY] == 'X') {
                     countDeadCells++;
                 }
             }
