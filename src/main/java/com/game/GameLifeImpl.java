@@ -6,15 +6,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URL;
-import java.util.Properties;
 
 public class GameLifeImpl implements GameLife {
     private final static Logger log = LoggerFactory.getLogger(GameLifeImpl.class);
 
     private LoaderConfigLifeGame loader;
     char[][] matrix;
-
-
 
     public GameLifeImpl(LoaderConfigLifeGame loader) {
         this.loader = loader;
@@ -93,9 +90,9 @@ public class GameLifeImpl implements GameLife {
                     continue;
                 }
 
-                    if (matrix[indexX][indexY] == 'O') {
-                        countDeadCells++;
-                    }
+                if (matrix[indexX][indexY] == 'O') {
+                    countDeadCells++;
+                }
             }
         }
 
@@ -121,7 +118,7 @@ public class GameLifeImpl implements GameLife {
     @Override
     public void writeToFile() {
         String fileName;
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("result.txt"))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("result.txt"))) {
             for (int i = 0; i < loader.getSizeX(); i++) {
                 bufferedWriter.write(matrix[i]);
                 bufferedWriter.newLine();
