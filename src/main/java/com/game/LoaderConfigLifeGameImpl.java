@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class LoaderConfigLifeGameImpl implements LoaderConfigLifeGame{
+public class LoaderConfigLifeGameImpl {
 
     private int sizeX;
     private int sizeY;
