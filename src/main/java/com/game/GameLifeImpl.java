@@ -28,11 +28,7 @@ public class GameLifeImpl implements GameLife {
         char[][] chars = initMatrix();
         for (int i = 0; i < loader.getSizeX(); i++) {
             for (int j = 0; j < loader.getSizeY(); j++) {
-                if (matrix[i][j] == 'X') {
-                    chars[i][j] = checkAliveCell(i, j);
-                } else {
-                    chars[i][j] = checkDeadCell(i, j);
-                }
+                chars[i][j] = matrix[i][j] == 'X' ? checkAliveCell(i, j) : checkDeadCell(i, j);
             }
         }
 
@@ -40,6 +36,26 @@ public class GameLifeImpl implements GameLife {
     }
 
     private char checkAliveCell(int x, int y) {
+        int countAliveCells = countAliveCells(x, y);
+
+        if (countAliveCells == 2 || countAliveCells == 3) {
+            return 'X';
+        } else {
+            return 'O';
+        }
+    }
+
+    private char checkDeadCell(int x, int y) {
+        int countAliveCells = countAliveCells(x, y);
+
+        if (countAliveCells == 3) {
+            return 'X';
+        } else {
+            return 'O';
+        }
+    }
+
+    private int countAliveCells(int x, int y) {
         int countAliveCells = 0;
         int indexX, indexY;
 
@@ -64,43 +80,7 @@ public class GameLifeImpl implements GameLife {
             }
         }
 
-        if (countAliveCells == 2 || countAliveCells == 3) {
-            return 'X';
-        } else {
-            return 'O';
-        }
-    }
-
-    private char checkDeadCell(int x, int y) {
-        int countDeadCells = 0;
-        int indexX, indexY;
-
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                indexX = x + i;
-                if (indexX < 0 || indexX >= loader.getSizeX()) {
-                    continue;
-                }
-                indexY = y + j;
-                if (indexY < 0 || indexY >= loader.getSizeY()) {
-                    continue;
-                }
-
-                if (indexX == x && indexY == y) {
-                    continue;
-                }
-
-                if (matrix[indexX][indexY] == 'X') {
-                    countDeadCells++;
-                }
-            }
-        }
-
-        if (countDeadCells == 3) {
-            return 'X';
-        } else {
-            return 'O';
-        }
+        return countAliveCells;
     }
 
     private char[][] initMatrix() {
