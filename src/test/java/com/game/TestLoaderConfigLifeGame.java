@@ -20,12 +20,14 @@ public class TestLoaderConfigLifeGame {
 
     @Test
     public void testCheckProperties() {
+        //GIVEN
         Properties properties = new Properties();
         properties.setProperty("X","5");
         properties.setProperty("Y","5");
         properties.setProperty("count","3");
         properties.setProperty("file","5");
 
+        //THEN
         try {
             loader.checkProperties(properties);
         } catch (ApplicationException  e) {
@@ -35,11 +37,13 @@ public class TestLoaderConfigLifeGame {
 
     @Test
     public void testCheckPropertiesExceptionNotDefinedAttribute() {
+        //GIVEN
         Properties properties = new Properties();
         properties.setProperty("X","5");
         properties.setProperty("Y","5");
         properties.setProperty("file","5");
 
+        //THEN
         thrown.expect(ApplicationException.class);
         thrown.expectMessage(CoreMatchers.containsString("is not defined"));
 
@@ -48,12 +52,14 @@ public class TestLoaderConfigLifeGame {
 
     @Test
     public void testCheckPropertiesExceptionNotNumberAttribute() {
+        //GIVEN
         Properties properties = new Properties();
         properties.setProperty("X","I5");
         properties.setProperty("Y","5");
         properties.setProperty("count","3");
         properties.setProperty("file","5");
 
+        //THEN
         thrown.expect(ApplicationException.class);
         thrown.expectMessage(CoreMatchers.containsString("is not a number"));
 
@@ -62,12 +68,14 @@ public class TestLoaderConfigLifeGame {
 
     @Test
     public void testCheckPropertiesExceptionNotPositiveNumberAttribute() {
+        //GIVEN
         Properties properties = new Properties();
         properties.setProperty("X","-5");
         properties.setProperty("Y","5");
         properties.setProperty("count","3");
         properties.setProperty("file","5");
 
+        //THEN
         thrown.expect(ApplicationException.class);
         thrown.expectMessage(CoreMatchers.containsString("It must be positive"));
 
@@ -76,11 +84,13 @@ public class TestLoaderConfigLifeGame {
 
     @Test
     public void testCheckPropertiesExceptionNotDefineFileMatrix() {
+        //GIVEN
         Properties properties = new Properties();
         properties.setProperty("X","5");
         properties.setProperty("Y","5");
         properties.setProperty("count","3");
 
+        //THEN
         thrown.expect(ApplicationException.class);
         thrown.expectMessage(CoreMatchers.containsString("Not defined file with init matrix"));
 
@@ -89,11 +99,13 @@ public class TestLoaderConfigLifeGame {
 
     @Test
     public void testCheckPropertiesLoadProperties() {
+        //WHEN
         loader.loadConfig();
 
+        //THEN
         Assert.assertEquals(5,loader.getSizeX());
         Assert.assertEquals(5,loader.getSizeY());
-        Assert.assertEquals(4,loader.getCountTicks());
+        Assert.assertEquals(2,loader.getCountTicks());
         Assert.assertEquals("initMatrix.txt",loader.getFileMatrix());
     }
 }

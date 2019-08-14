@@ -30,7 +30,7 @@ public class LoaderConfigLifeGame {
         try {
             matrix = readMatrix();
         } catch (IOException ex) {
-            throw new ApplicationException("Error reaiding file with matrix",ex);
+            throw new ApplicationException("Error reading file with matrix", ex);
         }
     }
 

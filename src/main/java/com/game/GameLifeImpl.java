@@ -133,4 +133,8 @@ public class GameLifeImpl implements GameLife {
 
         return result.toString();
     }
+
+    public char[][] getMatrix() {
+        return matrix;
+    }
 }
